@@ -6,4 +6,10 @@
     <string name="An_error_occurred_please_try_again_later">An error ocurred! Please try again</string>
     <string name="Unknown_Error_Message">Unknown error ocurred. Please try again.</string>
     <string name="home_page_title">Google News</string>
+    <string name="ConnectionError">Connection Failed</string>
+    <string name="NoInternetConnection">There is no internet connection. Could you check your internet connection?</string>
+    <string name="home">Home Page</string>
+    <string name="search">Search</string>
+    <string name="favorite">Favorite</string>
+    <string name="detail">Detail</string>
 </resources>

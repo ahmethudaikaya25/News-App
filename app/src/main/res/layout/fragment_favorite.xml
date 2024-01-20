@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ahk.newsapp.feature.favorite.FavoriteViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.ahk.newsapp.base.ui.custom_views.ErrorItemLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE}"
+            app:setErrorContent="@{viewModel.uiState.isError() ? viewModel.uiState.getErrorException().data : null}" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="@{viewModel.uiState.isLoading() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shimmer_auto_start="true"
+            app:shimmer_base_alpha="0.3"
+            app:shimmer_base_color="@color/md_theme_surfaceContainerLow_mediumContrast"
+            app:shimmer_direction="left_to_right"
+            app:shimmer_duration="1000">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/article_list_item" />
+
+                <include layout="@layout/article_list_item" />
+
+                <include layout="@layout/article_list_item" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFavoriteNews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

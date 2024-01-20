@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ahk.newsapp.feature.search.SearchViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="com.ahk.newsapp.R" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".feature.search.Search">
+
+        <com.ahk.newsapp.base.ui.custom_views.ErrorItemLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE}"
+            app:setErrorContent="@{viewModel.uiState.isError() ? viewModel.uiState.getErrorException().data : null}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{!viewModel.uiState.isError() ? View.VISIBLE : View.GONE}">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:onTextChanged="@{(text, start, before, count) -> viewModel.onSearchTextChanged(text)}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="@{viewModel.uiState.isLoading() ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toBottomOf="@id/search_input_layout"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.3"
+                app:shimmer_base_color="@color/md_theme_surfaceContainerLow_mediumContrast"
+                app:shimmer_direction="left_to_right"
+                app:shimmer_duration="1000">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/article_list_item" />
+
+                    <include layout="@layout/article_list_item" />
+
+                    <include layout="@layout/article_list_item" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <TextView
+                android:id="@+id/temporary_error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.uiState.isTemporaryError() ? viewModel.uiState.getTemporaryErrorException().data.message : R.string.Unknown_Error}"
+                android:visibility="@{viewModel.uiState.isTemporaryError() ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toBottomOf="@id/search_input_layout"
+                tools:text="Error" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_result_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/temporary_error_layout"
+                tools:itemCount="5"
+                tools:listitem="@layout/article_list_item" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

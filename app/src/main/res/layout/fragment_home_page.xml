@@ -1,21 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.ahk.newsapp.feature.home_page.HomePageViewModel" />
+
+        <import type="android.view.View" />
+
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.home_page.HomePage">
+        tools:context=".ui.home.HomeFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <com.ahk.newsapp.base.ui.custom_views.ErrorItemLayout
+            android:id="@+id/error"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE }"
+            app:setErrorContent="@{viewModel.uiState.isError() ? viewModel.uiState.getException().data : null}" />
 
-    </FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.uiState.isError() ? View.GONE : View.VISIBLE }">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvNewTypes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/article_category_button_item" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPopularNews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/rvNewTypes" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

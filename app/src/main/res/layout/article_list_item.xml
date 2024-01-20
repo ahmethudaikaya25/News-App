@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="articleListItemEntity"
+            type="com.ahk.newsapp.feature.home_page.model.ArticleEntity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivArticleImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/default_error_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvArticleSource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{articleListItemEntity.source.name}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivArticleImage"
+            tools:text="Source bane" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvArticleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{articleListItemEntity.title}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvArticleSource"
+            tools:text="Title" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvArticleDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{articleListItemEntity.description}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvArticleTitle"
+            tools:text="Description" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

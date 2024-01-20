@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ahk.newsapp.feature.detail.DetailViewModel" />
+
+        <import type="com.ahk.newsapp.feature.detail.DetailUIState" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.uiState.isLoading() ? View.VISIBLE : View.GONE}"
+            app:indicatorColor="@color/material_dynamic_primary0"
+            app:indicatorSize="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.ahk.newsapp.base.ui.custom_views.ErrorItemLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE}"
+            app:setErrorContent="@{viewModel.uiState.isError() ? viewModel.uiState.getException().data : null}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            app:visibility="@{viewModel.uiState.isError() ? View.GONE : View.VISIBLE}">
+
+            <WebView
+                android:id="@+id/webViewContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{(viewModel.uiState.isSuccess() &amp;&amp; !viewModel.uiState.getHasContent()) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/informationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{(viewModel.uiState.isSuccess() &amp;&amp; viewModel.uiState.getHasContent()) ? View.VISIBLE : View.GONE}">
+
+                <ImageView
+                    android:id="@+id/articleImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:imageUrl="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessArticleEntity().urlToImage : null}"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/articleSourceName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessArticleEntity().source.name : ``}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/articleImage" />
+
+                <TextView
+                    android:id="@+id/articleTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessArticleEntity().title : ``}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/articleSourceName" />
+
+                <TextView
+                    android:id="@+id/articleDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessArticleEntity().content : ``}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/articleTitle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
