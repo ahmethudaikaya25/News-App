@@ -7,10 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HomePageViewModel @Inject constructor() : FragmentViewModel<HomePageUIEvent, HomePageUIState>() {
-
-
-}
+class HomePageViewModel @Inject constructor() :
+    FragmentViewModel<HomePageUIEvent, HomePageUIState>()
 
 sealed class HomePageUIState : FragmentUIState {
     object Loading : HomePageUIState()
@@ -23,4 +21,3 @@ sealed class HomePageUIEvent : FragmentUIEvent {
     object OnError : HomePageUIEvent()
     object OnSuccess : HomePageUIEvent()
 }
-

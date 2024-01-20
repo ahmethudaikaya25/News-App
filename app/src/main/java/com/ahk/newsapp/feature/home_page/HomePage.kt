@@ -7,7 +7,8 @@ import com.ahk.newsapp.databinding.FragmentHomePageBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomePage : BaseFragment<FragmentHomePageBinding, HomePageUIEvent, HomePageUIState, HomePageViewModel>() {
+class HomePage :
+    BaseFragment<FragmentHomePageBinding, HomePageUIEvent, HomePageUIState, HomePageViewModel>() {
     override val layoutId: Int
         get() = R.layout.fragment_home_page
     override val titleId: Int
@@ -34,6 +35,5 @@ class HomePage : BaseFragment<FragmentHomePageBinding, HomePageUIEvent, HomePage
 
     override fun initView(binding: FragmentHomePageBinding) {
         TODO("Not yet implemented")
-
     }
 }
