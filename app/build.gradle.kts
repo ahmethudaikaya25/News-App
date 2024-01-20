@@ -8,6 +8,8 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
+val API_KEY = "YOUR_API_KEY"
+
 android {
     namespace = "com.ahk.newsapp"
     compileSdk = 34
@@ -18,10 +20,10 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
+        buildConfig = true
         viewBinding = true
         dataBinding = true
     }
@@ -33,6 +35,18 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            buildConfigField("String", "BASE_URL", "\"https://newsapi.org/v2/\"")
+            buildConfigField("String", "API_KEY", "\"$API_KEY\"")
+            buildConfigField("String", "API_COUNTRY", "\"tr\"")
+            buildConfigField("Int", "DEFAULT_PAGE_SIZE", "20")
+            buildConfigField("Boolean", "DEBUG", "false")
+        }
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://newsapi.org/\"")
+            buildConfigField("String", "API_KEY", "\"$API_KEY\"")
+            buildConfigField("String", "API_COUNTRY", "\"tr\"")
+            buildConfigField("Int", "DEFAULT_PAGE_SIZE", "20")
+            buildConfigField("Boolean", "DEBUG", "false")
         }
     }
     compileOptions {
@@ -59,14 +73,20 @@ dependencies {
     // timber
     implementation("com.jakewharton.timber:timber:5.0.1")
 
-    // kapt
+    // dagger hilt
     val hiltVersion = "2.50"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
-    // glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
+    // paging3
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    // glide
+    // retrofit
     // shimmer
     implementation("com.facebook.shimmer:shimmer:0.4.0")
 }

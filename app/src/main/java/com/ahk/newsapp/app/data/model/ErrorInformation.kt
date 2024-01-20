@@ -1,7 +1,7 @@
 package com.ahk.newsapp.app.data.model
 
-data class NewsResponse(
+data class ErrorInformation(
     override val status: String = "",
-    val articles: List<Article> = listOf(),
-    val totalResults: Int,
+    val code: String = "",
+    val message: String = "",
 ) : BaseResponse(status)
