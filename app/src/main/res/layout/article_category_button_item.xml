@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="onItemClick"
+            type="com.ahk.newsapp.feature.util.ItemClickListener" />
+
+        <variable
             name="categoryButtonData"
             type="com.ahk.newsapp.feature.home_page.model.CategoryButtonData" />
     </data>
@@ -15,5 +19,6 @@
         android:layout_height="wrap_content"
         android:text="@{categoryButtonData.name}"
         app:buttonStyle="@{categoryButtonData.selected}"
+        android:onClick="@{() -> onItemClick.onClicked(categoryButtonData)}"
         tools:text="Text" />
 </layout>

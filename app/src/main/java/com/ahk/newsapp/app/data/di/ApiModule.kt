@@ -1,4 +1,4 @@
-package com.ahk.newsapp.app.data.api.di
+package com.ahk.newsapp.app.data.di
 
 import android.content.Context
 import com.ahk.newsapp.BuildConfig
@@ -18,11 +18,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+class ApiModule {
 
-    private const val CONNECT_TIMEOUT = 20L
-    private const val READ_TIMEOUT = 60L
-    private const val WRITE_TIMEOUT = 120L
+    companion object {
+        private const val CONNECT_TIMEOUT = 20L
+        private const val READ_TIMEOUT = 60L
+        private const val WRITE_TIMEOUT = 120L
+    }
 
     @Provides
     @Singleton
@@ -34,23 +36,18 @@ object NetworkModule {
                 HttpLoggingInterceptor.Level.NONE
             }
         }
-        return OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
+        return OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor)
             .addInterceptor(NetworkConnectionInterceptor(context))
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-            .build()
+            .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS).build()
     }
 
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+        return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build()
     }
 
     @Provides

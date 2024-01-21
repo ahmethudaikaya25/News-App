@@ -12,4 +12,8 @@
     <string name="search">Search</string>
     <string name="favorite">Favorite</string>
     <string name="detail">Detail</string>
+    <string name="Request_Error">Server Connection Error</string>
+    <string name="Authentication_Error">Authentication Error</string>
+    <string name="Too_Many_Requests">Too Many Requests</string>
+    <string name="Server_Error">An Error Ocurred at Server</string>
 </resources>

@@ -1,18 +1,19 @@
 package com.ahk.newsapp.feature.home_page
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
 import com.ahk.newsapp.R
 import com.ahk.newsapp.base.ui.BaseFragment
-import com.ahk.newsapp.base.ui.BaseListAdapter
-import com.ahk.newsapp.base.ui.setup
-import com.ahk.newsapp.databinding.ArticleCategoryButtonItemBinding
-import com.ahk.newsapp.databinding.ArticleListItemBinding
 import com.ahk.newsapp.databinding.FragmentHomePageBinding
+import com.ahk.newsapp.feature.adapter.ArticleListAdapter
+import com.ahk.newsapp.feature.adapter.CategoryListAdapter
 import com.ahk.newsapp.feature.home_page.model.ArticleEntity
 import com.ahk.newsapp.feature.home_page.model.CategoryButtonData
-import com.ahk.newsapp.feature.home_page.model.SourceEntity
+import com.ahk.newsapp.feature.util.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -24,135 +25,34 @@ class HomePage :
         get() = R.string.home_page_title
     override val fragmentTag: String
         get() = "HomePage"
-    override val viewModel: HomePageViewModel = HomePageViewModel()
+    override val viewModel: HomePageViewModel by viewModels()
 
-    private lateinit var articleAdapter: BaseListAdapter<ArticleEntity, ArticleListItemBinding>
-    private lateinit var articleTypeButtons: BaseListAdapter<CategoryButtonData, ArticleCategoryButtonItemBinding>
-
-    private val dummyArticleList = listOf(
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity(
-                name = "name",
-            ),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity(
-                name = "name",
-            ),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity(
-                name = "name",
-            ),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity(
-                name = "name",
-            ),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity(
-                name = "name",
-            ),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-    )
-
-    private val buttonDummyList = listOf(
-        CategoryButtonData(
-            name = "name",
-            isSelected = false,
-        ),
-        CategoryButtonData(
-            name = "name",
-            isSelected = false,
-        ),
-        CategoryButtonData(
-            name = "name",
-            isSelected = false,
-        ),
-        CategoryButtonData(
-            name = "name",
-            isSelected = false,
-        ),
-        CategoryButtonData(
-            name = "name",
-            isSelected = true,
-        ),
-    )
+    private lateinit var articleListAdapter: ArticleListAdapter
+    private lateinit var categoryListAdapter: CategoryListAdapter
 
     override fun initView(binding: FragmentHomePageBinding) {
         binding.lifecycleOwner = viewLifecycleOwner
-        articleAdapter = object : BaseListAdapter<ArticleEntity, ArticleListItemBinding>() {
-            override fun getLayoutId() = R.layout.article_list_item
-            override fun setUIState(binding: ArticleListItemBinding, item: ArticleEntity) {
-                binding.articleListItemEntity = item
-            }
-        }
-        articleAdapter.onItemClickListener =
-            BaseListAdapter.OnItemClickListener { articleListItemEntity, _ ->
-                Timber.d("onItemClickListener: $articleListItemEntity")
-            }
-
-        articleAdapter.onItemLongClickListener =
-            BaseListAdapter.OnItemLongClickListener { articleListItemEntity, _ ->
-                Timber.d("onItemLongClickListener: $articleListItemEntity")
-            }
-
-        binding.rvPopularNews.setup(
-            articleAdapter,
-        )
-        articleAdapter.setItems(dummyArticleList)
-
-        articleTypeButtons =
-            object : BaseListAdapter<CategoryButtonData, ArticleCategoryButtonItemBinding>() {
-                override fun getLayoutId() = R.layout.article_category_button_item
-                override fun setUIState(
-                    binding: ArticleCategoryButtonItemBinding,
-                    item: CategoryButtonData,
-                ) {
-                    binding.categoryButtonData = item
+        viewModel.init()
+        articleListAdapter = ArticleListAdapter(
+            itemClickListener = object : ItemClickListener<ArticleEntity> {
+                override fun onClicked(article: ArticleEntity) {
+                    viewModel.onArticleClicked(article)
                 }
-            }
-        articleTypeButtons.onItemClickListener =
-            BaseListAdapter.OnItemClickListener { categoryButtonData, _ ->
-                Timber.d("onItemClickListener: $categoryButtonData")
-            }
-
-        binding.rvNewTypes.setup(
-            articleTypeButtons,
-            LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false,
-            ),
-
+            },
         )
-        articleTypeButtons.setItems(buttonDummyList)
+
+        binding.rvPopularNews.adapter = articleListAdapter
+
+        categoryListAdapter = CategoryListAdapter(
+            itemClickListener = object : ItemClickListener<CategoryButtonData> {
+                override fun onClicked(categoryButtonData: CategoryButtonData) {
+                    viewModel.onCategoryButtonClicked(categoryButtonData)
+                }
+            },
+        ).apply {
+            categoryList = viewModel.categoryButtonList
+        }
+        binding.rvNewTypes.adapter = categoryListAdapter
     }
 
     override fun setBindingViewModel() {
@@ -164,10 +64,32 @@ class HomePage :
     }
 
     override fun handleUIState(it: HomePageUIState) {
-        Timber.d("handleUIState: $it")
+        when (it) {
+            is HomePageUIState.Success -> {
+                categoryListAdapter.submitList(it.categoryButtonList)
+                lifecycleScope.launch {
+                    articleListAdapter.submitData(it.getSuccessArticleList() ?: PagingData.empty())
+                }
+            }
+
+            else -> {
+                Timber.d("handleUIState: $it")
+            }
+        }
     }
 
     override fun handleUIEvent(it: HomePageUIEvent) {
-        Timber.d("handleUIEvent: $it")
+        when (it) {
+            is HomePageUIEvent.OnArticleItemClicked -> {
+                viewModel.onArticleClicked(it.articleEntity)
+            }
+
+            is HomePageUIEvent.OnCategoryButtonClicked -> {
+                if (it.categoryButtonData.isSelected) {
+                    return
+                }
+                viewModel.fetchArticles(it.categoryButtonData.name)
+            }
+        }
     }
 }

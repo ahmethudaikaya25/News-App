@@ -24,6 +24,7 @@ sealed class CustomException(
         CustomException(data)
 
     data class NoInternetException(override val data: CustomExceptionData) : CustomException(data)
+    data class RequestError(override val data: CustomExceptionData) : CustomException(data)
 }
 
 data class CustomExceptionData(
@@ -37,11 +38,12 @@ enum class CustomExceptionCode(val code: Int) {
     DATABASE_EXCEPTION(101),
     UNKNOWN_EXCEPTION(102),
     NOT_VALID_PARAMETERS_EXCEPTION(103),
-    NO_INTERNET_EXCEPTION(400),
+    REQUEST_ERROR(400),
     AUTHENTICATION_EXCEPTION(401),
+    NOT_FOUND(404),
     REQUEST_TIMEOUT(408),
     TOO_MANY_REQUESTS(429),
-    NOT_FOUND(404),
+    NO_INTERNET_EXCEPTION(499),
     SERVER_EXCEPTION(500),
     UNKNOWN_ERROR(-1),
 }

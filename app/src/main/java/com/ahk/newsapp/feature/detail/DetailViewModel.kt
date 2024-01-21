@@ -11,10 +11,17 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor() : FragmentViewModel<DetailUIEvent, DetailUIState>() {
     fun initState(articleEntity: ArticleEntity) {
-        setState(
+        articleEntity.content?.let {
+            setState(
+                DetailUIState.Success(
+                    articleEntity = articleEntity,
+                    hasArticleContent = it.isNotEmpty(),
+                ),
+            )
+        } ?: setState(
             DetailUIState.Success(
                 articleEntity = articleEntity,
-                hasArticleContent = articleEntity.content.isNotEmpty(),
+                hasArticleContent = false,
             ),
         )
     }

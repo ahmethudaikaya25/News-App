@@ -4,12 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import com.ahk.newsapp.R
 import com.ahk.newsapp.base.ui.BaseFragment
-import com.ahk.newsapp.base.ui.BaseListAdapter
-import com.ahk.newsapp.base.ui.setup
-import com.ahk.newsapp.databinding.ArticleListItemBinding
 import com.ahk.newsapp.databinding.FragmentSearchBinding
-import com.ahk.newsapp.feature.home_page.model.ArticleEntity
-import com.ahk.newsapp.feature.home_page.model.SourceEntity
 import timber.log.Timber
 
 class Search :
@@ -22,76 +17,9 @@ class Search :
     override val fragmentTag: String
         get() = "Search"
 
-    lateinit var adapter: BaseListAdapter<ArticleEntity, ArticleListItemBinding>
-
-    val dummyRecyclerList = listOf(
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity("name"),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity("name"),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity("name"),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity("name"),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity("name"),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-        ArticleEntity(
-            description = "description",
-            source = SourceEntity("name"),
-            title = "title",
-            url = "url",
-            urlToImage = "urlToImage",
-            content = "content",
-        ),
-    )
-
     override fun initView(binding: FragmentSearchBinding) {
-        adapter = object : BaseListAdapter<ArticleEntity, ArticleListItemBinding>() {
-            override fun getLayoutId(): Int {
-                return R.layout.article_list_item
-            }
-
-            override fun setUIState(binding: ArticleListItemBinding, item: ArticleEntity) {
-                binding.articleListItemEntity = item
-            }
-        }
-        adapter.onItemClickListener = BaseListAdapter.OnItemClickListener { item, _ ->
-            viewModel.articleItemClicked(item)
-        }
-        binding.searchResultRecyclerView.setup(
-            adapter = adapter,
-        )
-        adapter.setItems(dummyRecyclerList)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
     }
 
     override fun setBindingViewModel() {

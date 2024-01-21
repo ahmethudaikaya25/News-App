@@ -4,16 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-            <variable
-                name="viewModel"
-                type="com.ahk.newsapp.feature.home_page.HomePageViewModel" />
 
         <variable
             name="viewModel"
             type="com.ahk.newsapp.feature.home_page.HomePageViewModel" />
 
         <import type="android.view.View" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,6 +21,7 @@
             android:id="@+id/error"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            tools:visibility="gone"
             android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE }"
             app:setErrorContent="@{viewModel.uiState.isError() ? viewModel.uiState.getException().data : null}" />
 
@@ -43,13 +40,41 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/article_category_button_item" />
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="@{viewModel.uiState.isLoading() ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toBottomOf="@id/rvNewTypes"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.3"
+                app:shimmer_base_color="@color/md_theme_surfaceContainerLow_mediumContrast"
+                app:shimmer_direction="left_to_right"
+                app:shimmer_duration="1000">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/article_list_item" />
+
+                    <include layout="@layout/article_list_item" />
+
+                    <include layout="@layout/article_list_item" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPopularNews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:padding="16dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/rvNewTypes" />
+                app:layout_constraintTop_toBottomOf="@id/rvNewTypes"
+                tools:listitem="@layout/article_list_item" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
