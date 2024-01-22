@@ -81,4 +81,9 @@ class Favorite :
             }
         }
     }
+
+    override fun onDestroyView() {
+        mBinding?.rvFavoriteNews?.adapter = null
+        super.onDestroyView()
+    }
 }

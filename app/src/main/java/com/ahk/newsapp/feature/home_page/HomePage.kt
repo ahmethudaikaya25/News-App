@@ -93,6 +93,7 @@ class HomePage :
                     ),
                 )
             }
+
             is HomePageUIEvent.OnCategoryButtonClicked -> {
                 if (it.categoryButtonData.isSelected) {
                     return
@@ -100,5 +101,11 @@ class HomePage :
                 viewModel.fetchArticles(it.categoryButtonData.name)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        mBinding?.rvPopularNews?.adapter = null
+        mBinding?.rvNewTypes?.adapter = null
+        super.onDestroyView()
     }
 }

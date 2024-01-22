@@ -22,8 +22,8 @@ class SearchViewModel @Inject constructor(
     val searchArticlesUseCase: SearchArticlesUseCase,
     val toggleBookmarkUseCase: ToggleBookmarkUseCase,
 ) : FragmentViewModel<SearchUIEvent, SearchUIState>() {
-    var lastFormData: SearchFormData = SearchFormData()
-    var searchJob: Job? = null
+    private var lastFormData: SearchFormData = SearchFormData()
+    private var searchJob: Job? = null
 
     override fun setState(state: SearchUIState) {
         lastFormData = when (state) {
@@ -109,6 +109,11 @@ class SearchViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    override fun onCleared() {
+        searchJob?.cancel()
+        super.onCleared()
     }
 }
 

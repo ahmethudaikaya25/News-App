@@ -54,6 +54,7 @@ class Search :
             is SearchUIState.Success -> {
                 adapter.submitData(lifecycle, it.articles)
             }
+
             else -> {}
         }
     }
@@ -66,5 +67,10 @@ class Search :
                 )
             }
         }
+    }
+
+    override fun onDestroyView() {
+        mBinding?.searchResultRecyclerView?.adapter = null
+        super.onDestroyView()
     }
 }
