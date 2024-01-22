@@ -159,7 +159,6 @@ class HomePageViewModel @Inject constructor(
 }
 
 sealed class HomePageUIState : FragmentUIState {
-    data object Idle : HomePageUIState()
     data object Loading : HomePageUIState()
     data class Error(
         val customException: CustomException,
@@ -172,7 +171,6 @@ sealed class HomePageUIState : FragmentUIState {
 
     fun isError() = this is Error
     fun isLoading() = this is Loading
-    fun isSuccess() = this is Success
 
     fun getException(): CustomException? {
         return if (this is Error) {

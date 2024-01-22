@@ -8,7 +8,8 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
-val API_KEY = "f14a20d1b627481c8b2a47c7d406f5b4"
+// take api key from gradle.properties
+val apiKey: String by project
 
 android {
     namespace = "com.ahk.newsapp"
@@ -36,14 +37,14 @@ android {
                 "proguard-rules.pro",
             )
             buildConfigField("String", "BASE_URL", "\"https://newsapi.org/v2/\"")
-            buildConfigField("String", "API_KEY", "\"$API_KEY\"")
+            buildConfigField("String", "API_KEY", "\"$apiKey\"")
             buildConfigField("String", "API_COUNTRY", "\"tr\"")
             buildConfigField("Integer", "DEFAULT_PAGE_SIZE", "20")
             buildConfigField("Boolean", "DEBUG", "false")
         }
         debug {
             buildConfigField("String", "BASE_URL", "\"https://newsapi.org/v2/\"")
-            buildConfigField("String", "API_KEY", "\"$API_KEY\"")
+            buildConfigField("String", "API_KEY", "\"$apiKey\"")
             buildConfigField("String", "API_COUNTRY", "\"tr\"")
             buildConfigField("Integer", "DEFAULT_PAGE_SIZE", "20")
             buildConfigField("Boolean", "DEBUG", "false")
@@ -85,7 +86,7 @@ dependencies {
     // glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
     // shimmer
-    implementation("com.facebook.shimmer:shimmer:0.4.0")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
     // room
     implementation("androidx.room:room-runtime:2.4.1")
     kapt("androidx.room:room-compiler:2.4.1")

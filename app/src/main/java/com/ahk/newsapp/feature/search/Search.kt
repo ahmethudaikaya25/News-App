@@ -10,6 +10,7 @@ import com.ahk.newsapp.feature.adapter.ArticleListAdapter
 import com.ahk.newsapp.feature.home_page.model.ArticleEntity
 import com.ahk.newsapp.feature.util.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class Search :
@@ -55,7 +56,9 @@ class Search :
                 adapter.submitData(lifecycle, it.articles)
             }
 
-            else -> {}
+            else -> {
+                Timber.d("Unhandled state: $it")
+            }
         }
     }
 

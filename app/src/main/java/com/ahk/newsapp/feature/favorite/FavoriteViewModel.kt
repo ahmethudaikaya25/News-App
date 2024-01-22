@@ -89,8 +89,6 @@ sealed class FavoriteUIState : FragmentUIState {
 
     fun isLoading() = this is Loading
 
-    fun getSuccessArticles() = if (this is Success) articles else null
-
     fun getErrorException() = if (this is Error) exception else null
 }
 

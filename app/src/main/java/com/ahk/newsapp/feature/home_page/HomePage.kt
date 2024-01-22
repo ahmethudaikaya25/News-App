@@ -36,13 +36,13 @@ class HomePage :
         viewModel.init()
         articleListAdapter = ArticleListAdapter(
             itemClickListener = object : ItemClickListener<ArticleEntity> {
-                override fun onClicked(article: ArticleEntity) {
-                    viewModel.onArticleClicked(article)
+                override fun onClicked(data: ArticleEntity) {
+                    viewModel.onArticleClicked(data)
                 }
             },
             onBookmarkClickListener = object : ItemClickListener<ArticleEntity> {
-                override fun onClicked(article: ArticleEntity) {
-                    viewModel.onBookmarkClicked(article)
+                override fun onClicked(data: ArticleEntity) {
+                    viewModel.onBookmarkClicked(data)
                 }
             },
         )
@@ -51,8 +51,8 @@ class HomePage :
 
         categoryListAdapter = CategoryListAdapter(
             itemClickListener = object : ItemClickListener<CategoryButtonData> {
-                override fun onClicked(categoryButtonData: CategoryButtonData) {
-                    viewModel.onCategoryButtonClicked(categoryButtonData)
+                override fun onClicked(data: CategoryButtonData) {
+                    viewModel.onCategoryButtonClicked(data)
                 }
             },
         ).apply {
