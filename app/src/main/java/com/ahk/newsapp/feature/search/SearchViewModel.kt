@@ -1,16 +1,27 @@
 package com.ahk.newsapp.feature.search
 
+import android.text.Editable
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import com.ahk.newsapp.app.repository.SearchArticlesUseCase
 import com.ahk.newsapp.base.domain.CustomException
+import com.ahk.newsapp.base.domain.asCustomException
 import com.ahk.newsapp.base.ui.FragmentUIEvent
 import com.ahk.newsapp.base.ui.FragmentUIState
 import com.ahk.newsapp.base.ui.FragmentViewModel
 import com.ahk.newsapp.feature.home_page.model.ArticleEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor() : FragmentViewModel<SearchUIEvent, SearchUIState>() {
+class SearchViewModel @Inject constructor(
+    val searchArticlesUseCase: SearchArticlesUseCase,
+) : FragmentViewModel<SearchUIEvent, SearchUIState>() {
     var lastFormData: SearchFormData = SearchFormData()
+    var searchJob: Job? = null
 
     override fun setState(state: SearchUIState) {
         lastFormData = when (state) {
@@ -29,19 +40,56 @@ class SearchViewModel @Inject constructor() : FragmentViewModel<SearchUIEvent, S
         super.setState(state)
     }
 
+    init {
+        setState(SearchUIState.Success())
+    }
+
     fun articleItemClicked(item: ArticleEntity) {
         setEvent(SearchUIEvent.OnArticleItemClicked(item))
     }
 
-    fun onSearchTextChanged(query: CharSequence) {
-        // make search requests after 1 second of user inactivity
+    fun onSearchTextChanged(editable: Editable?) {
+        val text = editable.toString()
+        if (searchJob != null && searchJob?.isActive == true) {
+            searchJob?.cancel()
+        }
+
+        searchJob = viewModelScope.launch {
+            setState(SearchUIState.Loading(lastFormData))
+            if (text.length < 3) {
+                setState(
+                    SearchUIState.Success(
+                        SearchFormData(
+                            query = text,
+                        ),
+                        PagingData.empty(),
+                    ),
+                )
+                return@launch
+            }
+            delay(200)
+            try {
+                searchArticlesUseCase(text, viewModelScope).collect {
+                    setState(
+                        SearchUIState.Success(
+                            SearchFormData(
+                                query = text,
+                            ),
+                            it,
+                        ),
+                    )
+                }
+            } catch (e: Exception) {
+                setState(SearchUIState.Error(e.asCustomException()))
+            }
+        }
     }
 }
 
 sealed interface SearchUIState : FragmentUIState {
     data class Success(
         val formData: SearchFormData = SearchFormData(),
-        val articles: List<ArticleEntity> = emptyList(),
+        val articles: PagingData<ArticleEntity> = PagingData.empty(),
     ) : SearchUIState
 
     data class Loading(
@@ -56,7 +104,7 @@ sealed interface SearchUIState : FragmentUIState {
         val exception: CustomException,
     ) : SearchUIState
 
-    fun isSuccessful() = this is Success
+    fun isSuccess() = this is Success
 
     fun isError() = this is Error
 

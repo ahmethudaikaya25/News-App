@@ -30,7 +30,7 @@ class DetailViewModel @Inject constructor() : FragmentViewModel<DetailUIEvent, D
 sealed class DetailUIState : FragmentUIState {
     data class Success(
         val articleEntity: ArticleEntity = ArticleEntity(),
-        val hasArticleContent: Boolean = false,
+        val hasArticleContent: Boolean = !articleEntity.content.isNullOrEmpty(),
     ) : DetailUIState()
 
     data class Error(

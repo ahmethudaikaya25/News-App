@@ -5,8 +5,13 @@ import androidx.fragment.app.viewModels
 import com.ahk.newsapp.R
 import com.ahk.newsapp.base.ui.BaseFragment
 import com.ahk.newsapp.databinding.FragmentSearchBinding
+import com.ahk.newsapp.feature.adapter.ArticleListAdapter
+import com.ahk.newsapp.feature.home_page.model.ArticleEntity
+import com.ahk.newsapp.feature.util.ItemClickListener
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class Search :
     BaseFragment<FragmentSearchBinding, SearchUIEvent, SearchUIState, SearchViewModel>() {
     override val layoutId: Int
@@ -17,13 +22,22 @@ class Search :
     override val fragmentTag: String
         get() = "Search"
 
+    lateinit var adapter: ArticleListAdapter
+
     override fun initView(binding: FragmentSearchBinding) {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
+        adapter = ArticleListAdapter(
+            itemClickListener = object : ItemClickListener<ArticleEntity> {
+                override fun onClicked(data: ArticleEntity) {
+                    viewModel.articleItemClicked(data)
+                }
+            },
+        )
+        binding.searchResultRecyclerView.adapter = adapter
     }
 
     override fun setBindingViewModel() {
-        mBinding?.viewModel ?: return
+        mBinding?.viewModel = viewModel
     }
 
     override fun handleArgs(args: Bundle) {
@@ -31,7 +45,17 @@ class Search :
     }
 
     override fun handleUIState(it: SearchUIState) {
-        TODO("Not yet implemented")
+        when (it) {
+            is SearchUIState.Success -> {
+                adapter.submitData(lifecycle, it.articles)
+            }
+
+            is SearchUIState.Loading -> {
+                Timber.d("Loading: ${it.formData}")
+            }
+
+            else -> {}
+        }
     }
 
     override fun handleUIEvent(it: SearchUIEvent) {

@@ -17,7 +17,7 @@ interface ArticleService {
 
     @GET("everything")
     suspend fun searchNews(
-        @Query("country") countryCode: String = "tr",
+        @Query("language") language: String = "tr",
         @Query("q") searchQuery: String,
         @Query("page") pageNumber: Int = 1,
         @Query("pageSize") pageSize: Int = 20,

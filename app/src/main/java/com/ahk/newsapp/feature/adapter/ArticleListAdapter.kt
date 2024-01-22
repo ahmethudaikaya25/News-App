@@ -29,7 +29,9 @@ class ArticleListAdapter(private val itemClickListener: ItemClickListener<Articl
 
         private val diffCallback = object : DiffUtil.ItemCallback<ArticleEntity>() {
             override fun areItemsTheSame(oldItem: ArticleEntity, newItem: ArticleEntity): Boolean {
-                Timber.d("Ahmet" + "areItemsTheSame: ${oldItem.url == newItem.url}")
+                Timber.d("ahmet areItemsTheSame: ${oldItem.url == newItem.url}")
+                Timber.d("ahmet areItemsTheSame: ${oldItem.url}")
+                Timber.d("ahmet areItemsTheSame: ${newItem.url}")
                 return oldItem.url == newItem.url
             }
 
@@ -37,7 +39,9 @@ class ArticleListAdapter(private val itemClickListener: ItemClickListener<Articl
                 oldItem: ArticleEntity,
                 newItem: ArticleEntity,
             ): Boolean {
-                Timber.d("Ahmet" + "areContentsTheSame: ${oldItem == newItem}")
+                Timber.d("ahmet areContentsTheSame: ${oldItem == newItem}")
+                Timber.d("ahmet areContentsTheSame: $oldItem")
+                Timber.d("ahmet areContentsTheSame: $newItem")
                 return oldItem == newItem
             }
         }
