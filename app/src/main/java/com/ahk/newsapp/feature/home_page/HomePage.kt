@@ -3,6 +3,7 @@ package com.ahk.newsapp.feature.home_page
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import com.ahk.newsapp.R
 import com.ahk.newsapp.base.ui.BaseFragment
@@ -37,6 +38,11 @@ class HomePage :
             itemClickListener = object : ItemClickListener<ArticleEntity> {
                 override fun onClicked(article: ArticleEntity) {
                     viewModel.onArticleClicked(article)
+                }
+            },
+            onBookmarkClickListener = object : ItemClickListener<ArticleEntity> {
+                override fun onClicked(article: ArticleEntity) {
+                    viewModel.onBookmarkClicked(article)
                 }
             },
         )
@@ -81,9 +87,12 @@ class HomePage :
     override fun handleUIEvent(it: HomePageUIEvent) {
         when (it) {
             is HomePageUIEvent.OnArticleItemClicked -> {
-                viewModel.onArticleClicked(it.articleEntity)
+                findNavController().navigate(
+                    HomePageDirections.actionHomePageToDetail(
+                        article = it.articleEntity,
+                    ),
+                )
             }
-
             is HomePageUIEvent.OnCategoryButtonClicked -> {
                 if (it.categoryButtonData.isSelected) {
                     return

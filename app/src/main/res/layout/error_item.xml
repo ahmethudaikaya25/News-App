@@ -3,10 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
-        <variable
-            name="errorModel"
-            type="com.ahk.newsapp.base.domain.CustomExceptionData" />
+        <import type="com.ahk.newsapp.R" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +15,6 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_margin="@dimen/small_margin"
-            android:src="@drawable/default_error_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

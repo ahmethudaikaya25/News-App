@@ -5,6 +5,7 @@
     <string name="Unknown_Error">Unknown Error</string>
     <string name="An_error_occurred_please_try_again_later">An error ocurred! Please try again</string>
     <string name="Unknown_Error_Message">Unknown error ocurred. Please try again.</string>
+    <string name="Unknown_Error_Code">202</string>
     <string name="home_page_title">Google News</string>
     <string name="ConnectionError">Connection Failed</string>
     <string name="NoInternetConnection">There is no internet connection. Could you check your internet connection?</string>
@@ -16,4 +17,11 @@
     <string name="Authentication_Error">Authentication Error</string>
     <string name="Too_Many_Requests">Too Many Requests</string>
     <string name="Server_Error">An Error Ocurred at Server</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="news_could_not_be_opened">News couldn\'t be opened</string>
+    <string name="url_is_not_valid">Article couldn\'t be find</string>
+    <string name="database_error">Database Error!</string>
+    <string name="deleting_article_message">An error ocurred while deleting article from bookmarks</string>
+    <string name="inserting_article_message">An error ocurred while saving article</string>
+    <string name="error_checking_article_message">Error ocurred while checking article message</string>
 </resources>

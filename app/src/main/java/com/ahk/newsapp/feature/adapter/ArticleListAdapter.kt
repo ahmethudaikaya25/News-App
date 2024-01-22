@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ahk.newsapp.databinding.ArticleListItemBinding
 import com.ahk.newsapp.feature.home_page.model.ArticleEntity
 import com.ahk.newsapp.feature.util.ItemClickListener
-import timber.log.Timber
 
-class ArticleListAdapter(private val itemClickListener: ItemClickListener<ArticleEntity>) :
+class ArticleListAdapter(
+    private val itemClickListener: ItemClickListener<ArticleEntity>,
+    private val onBookmarkClickListener: ItemClickListener<ArticleEntity>,
+) :
     PagingDataAdapter<ArticleEntity, ArticleListAdapter.ViewHolder>(diffCallback) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -21,6 +23,8 @@ class ArticleListAdapter(private val itemClickListener: ItemClickListener<Articl
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArticleEntity) {
             binding.articleListItemEntity = item
+            binding.onBookmarkClick = onBookmarkClickListener
+            binding.onBookmarkClick = onBookmarkClickListener
             binding.executePendingBindings()
         }
     }
@@ -29,9 +33,6 @@ class ArticleListAdapter(private val itemClickListener: ItemClickListener<Articl
 
         private val diffCallback = object : DiffUtil.ItemCallback<ArticleEntity>() {
             override fun areItemsTheSame(oldItem: ArticleEntity, newItem: ArticleEntity): Boolean {
-                Timber.d("ahmet areItemsTheSame: ${oldItem.url == newItem.url}")
-                Timber.d("ahmet areItemsTheSame: ${oldItem.url}")
-                Timber.d("ahmet areItemsTheSame: ${newItem.url}")
                 return oldItem.url == newItem.url
             }
 
@@ -39,9 +40,6 @@ class ArticleListAdapter(private val itemClickListener: ItemClickListener<Articl
                 oldItem: ArticleEntity,
                 newItem: ArticleEntity,
             ): Boolean {
-                Timber.d("ahmet areContentsTheSame: ${oldItem == newItem}")
-                Timber.d("ahmet areContentsTheSame: $oldItem")
-                Timber.d("ahmet areContentsTheSame: $newItem")
                 return oldItem == newItem
             }
         }

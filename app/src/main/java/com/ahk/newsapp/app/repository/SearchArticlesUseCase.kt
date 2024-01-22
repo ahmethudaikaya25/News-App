@@ -1,6 +1,7 @@
 package com.ahk.newsapp.app.repository
 
 import androidx.paging.PagingData
+import androidx.paging.filter
 import androidx.paging.map
 import com.ahk.newsapp.base.domain.asCustomException
 import com.ahk.newsapp.feature.home_page.model.ArticleEntity
@@ -24,9 +25,13 @@ class SearchArticlesUseCase(
             }
         }
 
-        return articleRepository.searchNews(query, viewModelScope).map {
-            it.map { article ->
+        return articleRepository.searchNews(query, viewModelScope).map { articleApiPagingData ->
+            articleApiPagingData.map { article ->
                 article.toEntity()
+            }.filter { article ->
+                article.title?.let {
+                    !it.contains("[Removed]")
+                } ?: false
             }
         }.catch {
             Timber.e(it)

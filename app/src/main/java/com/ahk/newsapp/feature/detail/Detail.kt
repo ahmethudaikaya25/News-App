@@ -6,6 +6,7 @@ import com.ahk.newsapp.R
 import com.ahk.newsapp.base.ui.BaseFragment
 import com.ahk.newsapp.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class Detail :
@@ -19,6 +20,8 @@ class Detail :
     override val viewModel: DetailViewModel by viewModels()
 
     override fun initView(binding: FragmentDetailBinding) {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
     }
 
     override fun setBindingViewModel() {
@@ -26,13 +29,14 @@ class Detail :
     }
 
     override fun handleArgs(args: Bundle) {
+        viewModel.initState(DetailArgs.fromBundle(args).article)
     }
 
     override fun handleUIState(it: DetailUIState) {
-        TODO("Not yet implemented")
+        Timber.d("handleUIState: $it")
     }
 
     override fun handleUIEvent(it: DetailUIEvent) {
-        TODO("Not yet implemented")
+        Timber.d("handleUIEvent: $it")
     }
 }

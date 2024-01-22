@@ -17,7 +17,8 @@ data class ArticleApi(
     @PrimaryKey
     @SerializedName("url")
     val url: String = "",
-    @SerializedName("urlToImage") var urlToImage: String = "",
+    @SerializedName("urlToImage") var urlToImage: String? = "",
+    val isBookmarked: Boolean = false,
 ) : Parcelable {
     fun toEntity(): ArticleEntity {
         return ArticleEntity(
@@ -26,7 +27,17 @@ data class ArticleApi(
             title = title,
             url = url,
             urlToImage = urlToImage,
-            isBookmarked = false,
+            isBookmarked = isBookmarked,
+        )
+    }
+
+    fun toArticle(): Article {
+        return Article(
+            description = description ?: "",
+            source = source.toSource(),
+            title = title ?: "",
+            url = url,
+            urlToImage = urlToImage ?: "",
         )
     }
 }

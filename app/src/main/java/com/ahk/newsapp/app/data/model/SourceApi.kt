@@ -15,4 +15,8 @@ data class SourceApi(
             name = name,
         )
     }
+
+    fun toSource(): String {
+        return name
+    }
 }

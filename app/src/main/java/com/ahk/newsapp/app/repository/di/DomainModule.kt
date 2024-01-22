@@ -1,14 +1,16 @@
-package com.ahk.newsapp.app.data.di
+package com.ahk.newsapp.app.repository.di
 
 import com.ahk.newsapp.app.data.api.ArticleService
 import com.ahk.newsapp.app.data.database.ArticleDao
 import com.ahk.newsapp.app.repository.ArticleRepository
+import com.ahk.newsapp.app.repository.DeleteArticleFromBookmarksUseCase
 import com.ahk.newsapp.app.repository.FetchBookmarkedArticles
 import com.ahk.newsapp.app.repository.FetchBookmarkedArticlesUseCase
 import com.ahk.newsapp.app.repository.FetchBreakingArticles
 import com.ahk.newsapp.app.repository.FetchBreakingArticlesUseCase
 import com.ahk.newsapp.app.repository.SearchArticles
 import com.ahk.newsapp.app.repository.SearchArticlesUseCase
+import com.ahk.newsapp.app.repository.ToggleBookmarkUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,10 +46,12 @@ class DomainModule {
         fetchBookmarkedArticles: FetchBookmarkedArticles,
         fetchBreakingArticles: FetchBreakingArticles,
         searchArticles: SearchArticles,
+        articleDao: ArticleDao,
     ): ArticleRepository = ArticleRepository(
         fetchBookmarkedArticles = fetchBookmarkedArticles,
         fetchBreakingArticles = fetchBreakingArticles,
         searchArticles = searchArticles,
+        articleDao = articleDao,
     )
 
     @Provides
@@ -68,6 +72,20 @@ class DomainModule {
     fun provideSearchArticlesUseCase(
         articleRepository: ArticleRepository,
     ): SearchArticlesUseCase = SearchArticlesUseCase(
+        articleRepository = articleRepository,
+    )
+
+    @Provides
+    fun provideDeleteArticleFromBookmarksUseCase(
+        articleRepository: ArticleRepository,
+    ): DeleteArticleFromBookmarksUseCase = DeleteArticleFromBookmarksUseCase(
+        articleRepository = articleRepository,
+    )
+
+    @Provides
+    fun provideToggleBookmarkUseCase(
+        articleRepository: ArticleRepository,
+    ): ToggleBookmarkUseCase = ToggleBookmarkUseCase(
         articleRepository = articleRepository,
     )
 }

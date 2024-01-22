@@ -3,6 +3,7 @@ package com.ahk.newsapp.feature.home_page
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.ahk.newsapp.app.repository.FetchBreakingArticlesUseCase
+import com.ahk.newsapp.app.repository.ToggleBookmarkUseCase
 import com.ahk.newsapp.base.domain.CustomException
 import com.ahk.newsapp.base.domain.asCustomException
 import com.ahk.newsapp.base.ui.FragmentUIEvent
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
     val fetchBreakingArticlesUseCase: FetchBreakingArticlesUseCase,
+    val toggleBookmarkUseCase: ToggleBookmarkUseCase,
 ) : FragmentViewModel<HomePageUIEvent, HomePageUIState>() {
     var categoryButtonList: List<CategoryButtonData> = listOf(
         CategoryButtonData(
@@ -126,6 +128,33 @@ class HomePageViewModel @Inject constructor(
                 categoryButtonData = categoryButtonData,
             ),
         )
+    }
+
+    fun onBookmarkClicked(article: ArticleEntity) {
+        val category = uiState.value?.getSuccessCategoryButtonList()?.first {
+            it.isSelected
+        }?.name ?: "general"
+
+        viewModelScope.launch {
+            try {
+                toggleBookmarkUseCase(article)
+                fetchBreakingArticlesUseCase(category).collect {
+                    setState(
+                        HomePageUIState.Success(
+                            articleList = it,
+                            categoryButtonList = uiState.value?.getSuccessCategoryButtonList()
+                                ?: categoryButtonList,
+                        ),
+                    )
+                }
+            } catch (exception: Exception) {
+                setState(
+                    HomePageUIState.Error(
+                        customException = exception.asCustomException(),
+                    ),
+                )
+            }
+        }
     }
 }
 

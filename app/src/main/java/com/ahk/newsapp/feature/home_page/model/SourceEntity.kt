@@ -6,4 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SourceEntity(
     val name: String = "",
-) : Parcelable
+) : Parcelable {
+    fun toSource(): String {
+        return name
+    }
+}

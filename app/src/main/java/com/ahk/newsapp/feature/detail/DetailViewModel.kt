@@ -1,6 +1,8 @@
 package com.ahk.newsapp.feature.detail
 
+import com.ahk.newsapp.R
 import com.ahk.newsapp.base.domain.CustomException
+import com.ahk.newsapp.base.domain.CustomExceptionData
 import com.ahk.newsapp.base.ui.FragmentUIEvent
 import com.ahk.newsapp.base.ui.FragmentUIState
 import com.ahk.newsapp.base.ui.FragmentViewModel
@@ -11,19 +13,37 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor() : FragmentViewModel<DetailUIEvent, DetailUIState>() {
     fun initState(articleEntity: ArticleEntity) {
-        articleEntity.content?.let {
+        val url = articleEntity.url
+        val content = articleEntity.content
+        setState(DetailUIState.Loading)
+        if (content.isNullOrEmpty()) {
+            if (url.isNullOrEmpty()) {
+                setState(
+                    DetailUIState.Error(
+                        customException = CustomException.NotValidParametersException(
+                            CustomExceptionData(
+                                title = R.string.news_could_not_be_opened,
+                                message = R.string.url_is_not_valid,
+                            ),
+                        ),
+                    ),
+                )
+                return
+            }
             setState(
                 DetailUIState.Success(
                     articleEntity = articleEntity,
-                    hasArticleContent = it.isNotEmpty(),
+                    hasArticleContent = false,
                 ),
             )
-        } ?: setState(
-            DetailUIState.Success(
-                articleEntity = articleEntity,
-                hasArticleContent = false,
-            ),
-        )
+        } else {
+            setState(
+                DetailUIState.Success(
+                    articleEntity = articleEntity,
+                    hasArticleContent = true,
+                ),
+            )
+        }
     }
 }
 

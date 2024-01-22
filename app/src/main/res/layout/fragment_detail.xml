@@ -40,20 +40,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
-            app:visibility="@{viewModel.uiState.isError() ? View.GONE : View.VISIBLE}">
+            app:visibility="@{viewModel.uiState.isSuccess() ? View.VISIBLE : View.GONE}">
 
             <WebView
                 android:id="@+id/webViewContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{(viewModel.uiState.isSuccess() &amp;&amp; !viewModel.uiState.getHasContent()) ? View.VISIBLE : View.GONE}"
+                android:visibility="@{(viewModel.uiState.isSuccess() &amp;&amp; !viewModel.uiState.getHasContent()) ? View.VISIBLE : View.GONE, default=gone}"
+                app:loadUrl="@{(viewModel.uiState.isSuccess() &amp;&amp; !viewModel.uiState.getHasContent()) ? viewModel.uiState.getSuccessArticleEntity().url : null}"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/informationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{(viewModel.uiState.isSuccess() &amp;&amp; viewModel.uiState.getHasContent()) ? View.VISIBLE : View.GONE}">
+                android:visibility="@{(viewModel.uiState.isSuccess() &amp;&amp; viewModel.uiState.getHasContent()) ? View.VISIBLE : View.GONE, default=gone}">
 
                 <ImageView
                     android:id="@+id/articleImage"

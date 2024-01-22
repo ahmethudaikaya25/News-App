@@ -2,6 +2,7 @@ package com.ahk.newsapp.feature.search
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.ahk.newsapp.R
 import com.ahk.newsapp.base.ui.BaseFragment
 import com.ahk.newsapp.databinding.FragmentSearchBinding
@@ -9,7 +10,6 @@ import com.ahk.newsapp.feature.adapter.ArticleListAdapter
 import com.ahk.newsapp.feature.home_page.model.ArticleEntity
 import com.ahk.newsapp.feature.util.ItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class Search :
@@ -32,6 +32,11 @@ class Search :
                     viewModel.articleItemClicked(data)
                 }
             },
+            onBookmarkClickListener = object : ItemClickListener<ArticleEntity> {
+                override fun onClicked(data: ArticleEntity) {
+                    viewModel.bookmarkClicked(data)
+                }
+            },
         )
         binding.searchResultRecyclerView.adapter = adapter
     }
@@ -49,11 +54,6 @@ class Search :
             is SearchUIState.Success -> {
                 adapter.submitData(lifecycle, it.articles)
             }
-
-            is SearchUIState.Loading -> {
-                Timber.d("Loading: ${it.formData}")
-            }
-
             else -> {}
         }
     }
@@ -61,8 +61,9 @@ class Search :
     override fun handleUIEvent(it: SearchUIEvent) {
         when (it) {
             is SearchUIEvent.OnArticleItemClicked -> {
-                Timber.d("Article item clicked: ${it.articleEntity}")
-                Timber.d("Opening article in browser: ${it.articleEntity.url}")
+                findNavController().navigate(
+                    SearchDirections.actionSearchToDetail(it.articleEntity),
+                )
             }
         }
     }

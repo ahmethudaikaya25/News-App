@@ -8,7 +8,7 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
-val API_KEY = "YOUR_API_KEY"
+val API_KEY = "f14a20d1b627481c8b2a47c7d406f5b4"
 
 android {
     namespace = "com.ahk.newsapp"

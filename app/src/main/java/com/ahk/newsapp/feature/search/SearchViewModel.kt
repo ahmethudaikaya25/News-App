@@ -4,6 +4,7 @@ import android.text.Editable
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.ahk.newsapp.app.repository.SearchArticlesUseCase
+import com.ahk.newsapp.app.repository.ToggleBookmarkUseCase
 import com.ahk.newsapp.base.domain.CustomException
 import com.ahk.newsapp.base.domain.asCustomException
 import com.ahk.newsapp.base.ui.FragmentUIEvent
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     val searchArticlesUseCase: SearchArticlesUseCase,
+    val toggleBookmarkUseCase: ToggleBookmarkUseCase,
 ) : FragmentViewModel<SearchUIEvent, SearchUIState>() {
     var lastFormData: SearchFormData = SearchFormData()
     var searchJob: Job? = null
@@ -81,6 +83,30 @@ class SearchViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 setState(SearchUIState.Error(e.asCustomException()))
+            }
+        }
+    }
+
+    fun bookmarkClicked(data: ArticleEntity) {
+        viewModelScope.launch {
+            try {
+                toggleBookmarkUseCase(data)
+                searchArticlesUseCase(lastFormData.query, viewModelScope).collect {
+                    setState(
+                        SearchUIState.Success(
+                            SearchFormData(
+                                query = lastFormData.query,
+                            ),
+                            it,
+                        ),
+                    )
+                }
+            } catch (exception: Exception) {
+                setState(
+                    SearchUIState.Error(
+                        exception = exception.asCustomException(),
+                    ),
+                )
             }
         }
     }

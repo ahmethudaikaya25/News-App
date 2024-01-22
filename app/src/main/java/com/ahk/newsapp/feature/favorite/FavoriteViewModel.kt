@@ -2,6 +2,7 @@ package com.ahk.newsapp.feature.favorite
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.ahk.newsapp.app.repository.DeleteArticleFromBookmarksUseCase
 import com.ahk.newsapp.app.repository.FetchBookmarkedArticlesUseCase
 import com.ahk.newsapp.base.domain.CustomException
 import com.ahk.newsapp.base.domain.asCustomException
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val fetchBookmarkedArticles: FetchBookmarkedArticlesUseCase,
+    private val deleteArticleFromBookmarksUseCase: DeleteArticleFromBookmarksUseCase,
 ) : FragmentViewModel<FavoriteUIEvent, FavoriteUIState>() {
     fun init() {
         setState(
@@ -47,6 +49,27 @@ class FavoriteViewModel @Inject constructor(
             ),
         )
     }
+
+    fun onBookmarkClicked(data: ArticleEntity) {
+        viewModelScope.launch {
+            try {
+                deleteArticleFromBookmarksUseCase(data.toArticle())
+                fetchBookmarkedArticles().collect {
+                    setState(
+                        FavoriteUIState.Success(
+                            articles = it,
+                        ),
+                    )
+                }
+            } catch (exception: Exception) {
+                setState(
+                    FavoriteUIState.Error(
+                        exception = exception.asCustomException(),
+                    ),
+                )
+            }
+        }
+    }
 }
 
 sealed class FavoriteUIState : FragmentUIState {
@@ -60,7 +83,7 @@ sealed class FavoriteUIState : FragmentUIState {
 
     data object Loading : FavoriteUIState()
 
-    fun isSuccessful() = this is Success
+    fun isSuccess() = this is Success
 
     fun isError() = this is Error
 

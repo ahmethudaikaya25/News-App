@@ -24,7 +24,6 @@ class SearchArticles(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleApi> {
         return try {
             runOnDispatcher(Dispatchers.IO) {
-                Timber.e("ahmet load: $params")
                 articleService.searchNews(
                     language = language,
                     pageNumber = params.key ?: 1,
@@ -32,7 +31,6 @@ class SearchArticles(
                     searchQuery = query,
                 )
             }.let {
-                Timber.e("ahmet load: ${it.articles}")
                 LoadResult.Page(
                     data = it.articles,
                     prevKey = if (params.key == 1) null else (params.key?.minus(1)),

@@ -13,6 +13,12 @@
             name="onItemClick"
             type="com.ahk.newsapp.feature.util.ItemClickListener" />
 
+        <variable
+            name="onBookmarkClick"
+            type="com.ahk.newsapp.feature.util.ItemClickListener" />
+
+        <import type="com.ahk.newsapp.R" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,13 +35,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/bookmark"
-
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/bookmark"
+            android:onClick="@{ () -> onBookmarkClick.onClicked(articleListItemEntity) }"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setBookmarkedIcon="@{articleListItemEntity.isBookmarked}" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvArticleSource"
