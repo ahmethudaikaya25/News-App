@@ -12,7 +12,7 @@ import timber.log.Timber
 class SearchArticles(
     private val articleService: ArticleService,
 ) : PagingSource<Int, ArticleApi>() {
-    var language: String = "tr"
+    private var language: String = "en"
     var query: String = ""
     override fun getRefreshKey(state: PagingState<Int, ArticleApi>): Int? {
         return state.anchorPosition?.let {

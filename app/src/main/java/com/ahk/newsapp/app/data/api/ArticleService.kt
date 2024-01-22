@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface ArticleService {
     @GET("top-headlines")
     suspend fun getBreakingNews(
-        @Query("country") countryCode: String = "tr",
+        @Query("country") countryCode: String = "us",
         @Query("page") pageNumber: Int = 1,
         @Query("pageSize") pageSize: Int = 20,
         @Query("category") category: String = "general",

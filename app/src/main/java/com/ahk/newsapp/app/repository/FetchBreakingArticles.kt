@@ -12,7 +12,7 @@ import timber.log.Timber
 class FetchBreakingArticles(
     private val articleService: ArticleService,
 ) : PagingSource<Int, ArticleApi>() {
-    var countryCode: String = "tr"
+    var countryCode: String = "us"
     var category: String = "general"
 
     override fun getRefreshKey(state: PagingState<Int, ArticleApi>): Int? {
