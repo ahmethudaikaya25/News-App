@@ -55,7 +55,7 @@ Users can conduct custom news searches using specific keywords.
 
 Users can access detailed information about each news article on this page.
 
-[![News Details](./screenshots/details.png)
+[![News Details](./screenshots/detail.png)
 
 ## Installation
 
